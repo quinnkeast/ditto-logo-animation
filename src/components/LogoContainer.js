@@ -155,6 +155,9 @@ const LogoContainer = ({
   // Handle play button clicks from parent
   useEffect(() => {
     const handleMessage = (event) => {
+      // Only handle messages from the same window (prevent cross-window interference)
+      if (event.source !== window) return;
+      
       if (event.data?.type === 'PLAY_ANIMATION') {
         triggerAnimation();
       } else if (event.data?.type === 'RESET_ANIMATION') {

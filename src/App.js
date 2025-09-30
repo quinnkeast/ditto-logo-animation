@@ -33,26 +33,52 @@ function App() {
   }, [currentAnimation, currentLogo, duration, delay, stackDuration]);
 
   const stopLoop = useCallback(() => {
+    // Clear any type of timer (interval or timeout chain)
     if (animationIntervalRef.current) {
-      clearInterval(animationIntervalRef.current);
-      animationIntervalRef.current = null;
+      if (typeof animationIntervalRef.current === 'number' && animationIntervalRef.current > 1000000) {
+        // This is a loop ID, just nullify it to stop the chain
+        animationIntervalRef.current = null;
+      } else {
+        // This is a regular interval, clear it
+        clearInterval(animationIntervalRef.current);
+        animationIntervalRef.current = null;
+      }
     }
   }, []);
 
   const startLoopedAnimation = useCallback(() => {
+    // First, ensure any existing loop is stopped
+    stopLoop();
+    
     const totalDuration = calculateAnimationDuration();
     
     // Trigger first animation immediately
     window.postMessage({ type: 'PLAY_ANIMATION' }, '*');
     
-    // Set up interval for looping - use loopInterval for pause between loops
-    animationIntervalRef.current = setInterval(() => {
-      window.postMessage({ type: 'RESET_ANIMATION' }, '*');
-      setTimeout(() => {
-        window.postMessage({ type: 'PLAY_ANIMATION' }, '*');
-      }, 100);
-    }, totalDuration + loopInterval); // Use configurable loop interval
-  }, [calculateAnimationDuration, loopInterval]);
+    // Create a unique identifier for this loop session
+    const loopId = Date.now();
+    
+    const scheduleNextLoop = () => {
+      // Only schedule if this loop session is still active
+      if (animationIntervalRef.current === loopId) {
+        setTimeout(() => {
+          if (animationIntervalRef.current === loopId) {
+            window.postMessage({ type: 'RESET_ANIMATION' }, '*');
+            setTimeout(() => {
+              if (animationIntervalRef.current === loopId) {
+                window.postMessage({ type: 'PLAY_ANIMATION' }, '*');
+                scheduleNextLoop(); // Schedule the next iteration
+              }
+            }, 100);
+          }
+        }, totalDuration + loopInterval);
+      }
+    };
+    
+    // Store the loop ID and start the loop
+    animationIntervalRef.current = loopId;
+    scheduleNextLoop();
+  }, [calculateAnimationDuration, loopInterval, stopLoop]);
 
   const handlePlayAnimation = () => {
     if (isLooping) {
