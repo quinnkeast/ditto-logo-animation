@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Animation Sandbox</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Logo Animation Sandbox</h1>
+        </header>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="logo-select">Logo Type:</label>
+                <select id="logo-select">
+                    <option value="icon">Icon</option>
+                    <option value="wordmark">Wordmark</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="animation-select">Animation Type:</label>
+                <select id="animation-select">
+                    <option value="explode">Explode & Contract</option>
+                    <option value="stack">Stack Expansion</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="duration">Duration (ms):</label>
+                <input type="range" id="duration" min="500" max="3000" value="1500">
+                <span id="duration-value">1500ms</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="delay">Delay Between Units (ms):</label>
+                <input type="range" id="delay" min="0" max="500" value="100">
+                <span id="delay-value">100ms</span>
+            </div>
+            
+            <div class="control-group" id="explode-intensity">
+                <label for="intensity">Expansion Intensity:</label>
+                <input type="range" id="intensity" min="0.5" max="3" step="0.1" value="1">
+                <span id="intensity-value">1x</span>
+            </div>
+            
+            <div class="control-group" id="stack-spacing" style="display: none;">
+                <label for="stack-intensity">Stack Spacing:</label>
+                <input type="range" id="stack-intensity" min="0.5" max="3" step="0.1" value="1">
+                <span id="stack-intensity-value">1x</span>
+            </div>
+            
+            <div class="control-group" id="stack-speed" style="display: none;">
+                <label for="stack-duration">Stack Animation Speed (ms):</label>
+                <input type="range" id="stack-duration" min="200" max="2000" value="800">
+                <span id="stack-duration-value">800ms</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="easing">Easing:</label>
+                <select id="easing">
+                    <option value="ease">ease</option>
+                    <option value="ease-in">ease-in</option>
+                    <option value="ease-out">ease-out</option>
+                    <option value="ease-in-out">ease-in-out</option>
+                    <option value="cubic-bezier(0.68, -0.55, 0.265, 1.55)">bounce</option>
+                    <option value="cubic-bezier(0.175, 0.885, 0.32, 1.275)">back</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <button id="play-animation">Play Animation</button>
+                <button id="reset-animation">Reset</button>
+            </div>
+            
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="loop-animation">
+                    Loop Animation
+                </label>
+            </div>
+            
+            <div class="control-group">
+                <label for="logo-size">Logo Size (px):</label>
+                <input type="number" id="logo-size" min="50" max="2000" value="400">
+            </div>
+            
+            <div class="control-group">
+                <button id="export-code">Export Code</button>
+            </div>
+        </div>
+        
+        <div class="animation-container">
+            <div id="logo-container">
+                <!-- Logo SVG will be inserted here -->
+            </div>
+        </div>
+        
+        <div id="export-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Export Animation Code</h2>
+                    <button class="close" id="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="export-section">
+                        <h3>SVG Code</h3>
+                        <textarea id="svg-output" readonly></textarea>
+                        <button class="copy-btn" data-target="svg-output">Copy SVG</button>
+                    </div>
+                    <div class="export-section">
+                        <h3>CSS Code</h3>
+                        <textarea id="css-output" readonly></textarea>
+                        <button class="copy-btn" data-target="css-output">Copy CSS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
